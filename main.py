@@ -20,6 +20,13 @@ def calc_disp(xs):
 def calc_sigma(xs):
     return math.sqrt(calc_disp(xs))
 
+def calc_correlation(f, g, xs, lag):
+    v = 0.0
+    for x in xs:
+        v += f(x) * g(x + lag)
+    v /= float(len(xs))
+    return v
+
 
 
 def generate(hs, t):
@@ -47,6 +54,18 @@ def main():
     plt.plot(xs, ys)
     plt.axhline(y = calc_mu(ys), color = "red")
     plt.show()
+
+
+    lags = np.linspace(0.0, 20.0, 1000)
+    f = lambda t: generate(harmonics, t)
+    g = f
+    cors = [ calc_correlation(f, g, xs, lag) for lag in lags ]
+
+
+    plt.plot(lags, cors)
+    plt.axhline(y = 0, color = "red")
+    plt.show()
+
 
     print("Hello, World!")
 
